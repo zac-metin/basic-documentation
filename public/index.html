@@ -8,7 +8,59 @@
   <div id="app"></div>
   <xmp theme="united" style="display:none;">
 
-# Nock Post Route Testing
+# Nock - Get Route Testing
+```
+test.cb('check artist id route', t => {
+ const artistObj = {
+   name: 'Izal',
+   type: 'artist'
+ }
+
+ let scope = nock('https://api.spotify.com')
+   .get('/v1/artists/2hazSY4Ef3aB9ATXW7F5w3')
+   .reply(200, artistObj)
+
+ request(app)
+   .get('/api/v1/spotify/artists/2hazSY4Ef3aB9ATXW7F5w3')
+   .expect(200)
+   .then((res) => {
+     scope.done()
+     t.is(res.body.name, 'Izal')
+     t.is(res.body.type, 'artist')
+     t.end()
+   })
+
+})
+```
+When mocking a post route with Nock we first set up the mock route that is to be hit instead, configuring the post route and its response.
+
+Once this is done we can attempt to hit our own post route API. What we are testing in this case is that the post route API works correctly and hits the external API that we are posting to.
+
+### Example Code - Commented:
+```
+test.cb('check artist id route', t => {
+ const artistObj = {
+   name: 'Izal',
+   type: 'artist'
+ }
+
+ let scope = nock('https://api.spotify.com')
+   .get('/v1/artists/2hazSY4Ef3aB9ATXW7F5w3')
+   .reply(200, artistObj)
+
+ request(app)
+   .get('/api/v1/spotify/artists/2hazSY4Ef3aB9ATXW7F5w3')
+   .expect(200)
+   .then((res) => {
+     scope.done()
+     t.is(res.body.name, 'Izal')
+     t.is(res.body.type, 'artist')
+     t.end()
+   })
+
+})
+```
+# Nock - Post Route Testing
 ```
 test.cb('check createPlaylist post route', t => {
 let scope = nock('https://api.spotify.com')
