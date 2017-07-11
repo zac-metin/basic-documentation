@@ -2,11 +2,67 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>React FTW!</title>
+  <title>Basic Documentation</title>
 </head>
 <body>
   <div id="app"></div>
+  <xmp theme="united" style="display:none;">
 
+# Nock Post Route Testing
+```
+test.cb('check createPlaylist post route', t => {
+let scope = nock('https://api.spotify.com')
+  .post(`/v1/users/some_username/playlists`)
+  .reply(201, {test: "73a"})
+let token = createToken({id: "some_username"}, app.get('JWT_SECRET'))
+  request(app)
+    .post('/api/v1/spotify/users/playlist')
+    .set('Cookie', `token=${token}`)
+    .then((result) => {
+      scope.done()
+      t.is(result.body.test, "73a")
+      t.end()
+    })
+})
+```
+When mocking a post route with Nock we first set up the mock route that is to be hit instead, configuring the post route and its response.
+
+Once this is done we can attempt to hit our own post route API. What we are testing in this case is that the post route API works correctly and hits the external API that we are posting to.
+
+### Example Code - Commented:
+```
+test.cb('check createPlaylist post route', t => {
+
+let scope = nock('https://api.spotify.com')
+  .post(`/v1/users/some_username/playlists`)
+  .reply(201, {test: "73a"})
+
+// These three lines set up our mocked external API. This means that when our test function tries to hit api.spotify.com at the specified post route
+// Nock will intercept it and reply with the status code and response object that we tell it to on the line above.
+
+  let token = createToken({id: "some_username"}, app.get('JWT_SECRET'))
+
+// Because we are dealing with an authenticated route, this line will take care of creating an authentication token for us
+
+// From now on we just test as we normally would with Supertest, save for the scope.done() which will hang if the API request does not complete.
+
+  request(app)
+    .post('/api/v1/spotify/users/playlist')
+    .set('Cookie', `token=${token}`)
+    .then((result) => {
+      scope.done()
+      t.is(result.body.test, "73a")
+      t.end()
+    })
+})
+```
+
+
+
+
+  </xmp>
+
+  <script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
   <script src="bundle.js"></script>
 </body>
 </html>
