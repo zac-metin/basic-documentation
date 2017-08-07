@@ -32,9 +32,11 @@ test.cb('check artist id route', t => {
 
 })
 ```
-When mocking a post route with Nock we first set up the mock route that is to be hit instead, configuring the post route and its response.
+When mocking a get route with Nock we first set up the mock route that is to be hit instead, configuring the get route and its response.
 
-Once this is done we can attempt to hit our own post route API. What we are testing in this case is that the post route API works correctly and hits the external API that we are posting to.
+Once this is done we can attempt to hit our own get route. What we are testing in this case is that the get route API works correctly and hits the external API that we are trying to retrieve from.
+
+The reason for this is that we will be running our tests often, and we do not want to actually hit the external API multiple times an hour.
 
 ### Example Code - Commented:
 ```
@@ -50,7 +52,7 @@ test.cb('check artist id route', t => {
    .get('/v1/artists/2hazSY4Ef3aB9ATXW7F5w3')
    .reply(200, artistObj)
 
-   // These three lines set up our mocked external API. This means that when our test function tries to hit api.spotify.com at the specified post route
+   // These three lines set up our mocked external API. This means that when our test function tries to hit api.spotify.com at the specified get route
    // Nock will intercept it and reply with the status code 200 and artistObj.
 
  request(app)
@@ -66,6 +68,9 @@ test.cb('check artist id route', t => {
    // From here we can just initiate a normal get request via superagent and Nock will intercept and respond as we set it to.
 
 })
+
+Post route testing with Nock is almost identical to Get route testing, as you can see below.
+
 ```
 # Nock - Post Route Testing
 ```
