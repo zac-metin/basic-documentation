@@ -44,9 +44,14 @@ test.cb('check artist id route', t => {
    type: 'artist'
  }
 
+ // We create a fake response object called artistObj that our mock server is going to reply with.
+
  let scope = nock('https://api.spotify.com')
    .get('/v1/artists/2hazSY4Ef3aB9ATXW7F5w3')
    .reply(200, artistObj)
+
+   // These three lines set up our mocked external API. This means that when our test function tries to hit api.spotify.com at the specified post route
+   // Nock will intercept it and reply with the status code 200 and artistObj.
 
  request(app)
    .get('/api/v1/spotify/artists/2hazSY4Ef3aB9ATXW7F5w3')
@@ -57,6 +62,8 @@ test.cb('check artist id route', t => {
      t.is(res.body.type, 'artist')
      t.end()
    })
+
+   // From here we can just initiate a normal get request via superagent and Nock will intercept and respond as we set it to.
 
 })
 ```
