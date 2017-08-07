@@ -8,7 +8,112 @@
   <div id="app"></div>
   <xmp theme="united" style="display:none;">
 
+# Redux Flow
+
+Redux is designed for top-down flow of state.
+
+### Initial Clientside Dispatch - (Not Always Needed)
+#### _Connected Component dispatches an API function that queries DB or external API._
+
+```
+// In client/containers/dataview.js
+componentWillMount(){
+  this.props.dispatch(fetchData(this.props.match.params.id))
+}
+
+// this.props.match.params.id will take the :id part of the current URL, which is useful when using restful routes and fetching data based on the page user is on.
+
+```
+### Action Dispatched
+#### _API function dispatches action with a type._
+
+```
+// In client/actions/data.js
+
+export function fetchData(arg){
+  return (dispatch) => {
+    request
+      .get(`/api/v1/route/${arg}`)
+      .end((err, res)=>{
+        if (err) {
+          dispatch((errorHandler(err)))
+        } else {
+          dispatch((fetchDataAction(res.body)))
+        }
+      })
+  }
+}
+
+export function fetchDataAction(res){
+  return{
+    type:'FETCH_DATA',
+    res
+  }
+}
+
+```
+### Reducer Stores Action
+#### _Reducer receives action of specified type and puts action object into the store._
+
+```
+// In client/reducers/data.js
+
+function data(state={},action){
+  switch (action.type){
+    case 'FETCH_DATA':
+      return{
+        ...state,
+        userdata: action.res
+      }
+    default:
+      return state
+  }
+}
+
+export default data
+
+```
+### Map State To Props
+#### _Connected Clientside Component Maps State To Props._
+```
+// In client/containers/dataview.js
+
+const mapState2Props = (state) => {
+  return {
+    data: state.data.userdata
+  }
+}
+
+export default connect(mapState2Props)(Dataview)
+
+```
+### Update State When Props Change
+#### _Connected Component takes Props on ComponentWillReceiveProps and updates state._
+```
+// In client/containers/dataview.js
+
+componentWillReceiveProps({data}) {
+   this.setState(
+    {
+      data: data
+    }
+   )
+}
+
+```
+#### _Loop now completed._
+
+#### _Live updating changes to state as user triggers change via UI_
+```
+...
+```
+#### _User changes and submissions dispatched in same API-action-reducer flow._
+```
+...
+```
+
 # Nock - Get Route Testing
+
 ```
 test.cb('check artist id route', t => {
  const artistObj = {
@@ -72,7 +177,9 @@ test.cb('check artist id route', t => {
 Post route testing with Nock is almost identical to Get route testing, as you can see below.
 
 ```
+
 # Nock - Post Route Testing
+
 ```
 test.cb('check createPlaylist post route', t => {
 let scope = nock('https://api.spotify.com')
@@ -107,6 +214,8 @@ let scope = nock('https://api.spotify.com')
   let token = createToken({id: "some_username"}, app.get('JWT_SECRET'))
 
 // Because we are dealing with an authenticated route, this line will take care of creating an authentication token for us
+
+// You can ignore this line and the .set below if you are working with a non-authenticated external API, but most external APIs will want auth.
 
 // From now on we just test as we normally would with Supertest, save for the scope.done() which will hang if the API request does not complete.
 

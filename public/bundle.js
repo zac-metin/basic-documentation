@@ -12342,6 +12342,12 @@ var Links = function Links() {
     _react2.default.createElement(
       'button',
       null,
+      'Redux'
+    ),
+    _react2.default.createElement('br', null),
+    _react2.default.createElement(
+      'button',
+      null,
       'Nock Testing'
     )
   );
