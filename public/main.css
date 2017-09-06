@@ -1,0 +1,18 @@
+#links {
+  position: fixed;
+  top: 43px;
+  background-color: black;
+  margin-top: 0;
+  padding-top: 0;
+  width: 100%;
+}
+#link {
+  margin: auto;
+  padding: 10px;
+}
+#headline, .container, .navbar, .navbar-inner, .navbar-fixed-top {
+  margin: 0;
+}
+xmp {
+  margin-top: 5%;
+}

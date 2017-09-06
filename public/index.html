@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" type="text/css" href="./main.css">
   <meta charset="UTF-8">
   <title>Basic Documentation</title>
   <div id="app"></div>
@@ -8,7 +9,6 @@
 <body>
 
   <xmp theme="united" style="display:none;">
-
 <a name=nockget>
 # Nock - Get Route Testing </a>
 
@@ -162,7 +162,7 @@ test('search bar search button renders search results', t => {
   wrapperMount.find('#search-button').simulate('click')
 
   // simulates a click and then below checks if a dispatch is initiated as a result of that click
-  
+
   t.is(store.dispatch.called,true)
 })
 ```
@@ -270,12 +270,9 @@ componentWillReceiveProps({data}) {
 ```
 ...
 ```
-
-
-
   </xmp>
-
   <script src="http://strapdownjs.com/v/0.2/strapdown.js"></script>
   <script src="bundle.js"></script>
+
 </body>
 </html>
