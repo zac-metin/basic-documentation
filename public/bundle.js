@@ -12229,9 +12229,9 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(233);
 
-var _Greetings = __webpack_require__(113);
+var _Links = __webpack_require__(113);
 
-var _Greetings2 = _interopRequireDefault(_Greetings);
+var _Links2 = _interopRequireDefault(_Links);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -12242,12 +12242,7 @@ var App = function App() {
     _react2.default.createElement(
       'div',
       { className: 'app-container' },
-      _react2.default.createElement(
-        'h1',
-        null,
-        'Links'
-      ),
-      _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _Greetings2.default })
+      _react2.default.createElement(_reactRouterDom.Route, { path: '/', component: _Links2.default })
     )
   );
 };
@@ -12338,17 +12333,31 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Links = function Links() {
   return _react2.default.createElement(
     'div',
-    null,
+    { id: 'links' },
     _react2.default.createElement(
-      'button',
-      null,
-      'Redux'
+      'a',
+      { href: '#nockget' },
+      'Nock - Get'
     ),
-    _react2.default.createElement('br', null),
     _react2.default.createElement(
-      'button',
-      null,
-      'Nock Testing'
+      'a',
+      { href: '#nockpost' },
+      'Nock - Post'
+    ),
+    _react2.default.createElement(
+      'a',
+      { href: '#enzymeshallow' },
+      'Enzyme - Shallow'
+    ),
+    _react2.default.createElement(
+      'a',
+      { href: '#enzymemount' },
+      'Enzyme - Mount'
+    ),
+    _react2.default.createElement(
+      'a',
+      { href: '#reduxflow' },
+      'Redux Flow'
     )
   );
 };

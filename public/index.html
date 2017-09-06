@@ -3,13 +3,172 @@
 <head>
   <meta charset="UTF-8">
   <title>Basic Documentation</title>
+  <div id="app"></div>
 </head>
 <body>
-  <div id="app"></div>
+
   <xmp theme="united" style="display:none;">
+
+<a name=nockget>
+# Nock - Get Route Testing </a>
+
+```
+test.cb('check artist id route', t => {
+ const artistObj = {
+   name: 'Izal',
+   type: 'artist'
+ }
+
+ let scope = nock('https://api.spotify.com')
+   .get('/v1/artists/2hazSY4Ef3aB9ATXW7F5w3')
+   .reply(200, artistObj)
+
+ request(app)
+   .get('/api/v1/spotify/artists/2hazSY4Ef3aB9ATXW7F5w3')
+   .expect(200)
+   .then((res) => {
+     scope.done()
+     t.is(res.body.name, 'Izal')
+     t.is(res.body.type, 'artist')
+     t.end()
+   })
+
+})
+```
+When mocking a get route with Nock we first set up the mock route that is to be hit instead, configuring the get route and its response.
+
+Once this is done we can attempt to hit our own get route. What we are testing in this case is that the get route API works correctly and hits the external API that we are trying to retrieve from.
+
+The reason for this is that we will be running our tests often, and we do not want to actually hit the external API multiple times an hour.
+
+### Example Code - Commented:
+```
+test.cb('check artist id route', t => {
+ const artistObj = {
+   name: 'Izal',
+   type: 'artist'
+ }
+
+ // We create a fake response object called artistObj that our mock server is going to reply with.
+
+ let scope = nock('https://api.spotify.com')
+   .get('/v1/artists/2hazSY4Ef3aB9ATXW7F5w3')
+   .reply(200, artistObj)
+
+   // These three lines set up our mocked external API. This means that when our test function tries to hit api.spotify.com at the specified get route
+   // Nock will intercept it and reply with the status code 200 and artistObj.
+
+ request(app)
+   .get('/api/v1/spotify/artists/2hazSY4Ef3aB9ATXW7F5w3')
+   .expect(200)
+   .then((res) => {
+     scope.done()
+     t.is(res.body.name, 'Izal')
+     t.is(res.body.type, 'artist')
+     t.end()
+   })
+
+   // From here we can just initiate a normal get request via superagent and Nock will intercept and respond as we set it to.
+
+})
+
+Post route testing with Nock is almost identical to Get route testing, as you can see below.
+
+```
+<a name=nockpost>
+# Nock - Post Route Testing </a>
+
+```
+test.cb('check createPlaylist post route', t => {
+let scope = nock('https://api.spotify.com')
+  .post(`/v1/users/some_username/playlists`)
+  .reply(201, {test: "73a"})
+let token = createToken({id: "some_username"}, app.get('JWT_SECRET'))
+  request(app)
+    .post('/api/v1/spotify/users/playlist')
+    .set('Cookie', `token=${token}`)
+    .then((result) => {
+      scope.done()
+      t.is(result.body.test, "73a")
+      t.end()
+    })
+})
+```
+When mocking a post route with Nock we first set up the mock route that is to be hit instead, configuring the post route and its response.
+
+Once this is done we can attempt to hit our own post route API. What we are testing in this case is that the post route API works correctly and hits the external API that we are posting to.
+
+### Example Code - Commented:
+```
+test.cb('check createPlaylist post route', t => {
+
+let scope = nock('https://api.spotify.com')
+  .post(`/v1/users/some_username/playlists`)
+  .reply(201, {test: "73a"})
+
+// These three lines set up our mocked external API. This means that when our test function tries to hit api.spotify.com at the specified post route
+// Nock will intercept it and reply with the status code and response object that we tell it to on the line above.
+
+  let token = createToken({id: "some_username"}, app.get('JWT_SECRET'))
+
+// Because we are dealing with an authenticated route, this line will take care of creating an authentication token for us
+
+// You can ignore this line and the .set below if you are working with a non-authenticated external API, but most external APIs will want auth.
+
+// From now on we just test as we normally would with Supertest, save for the scope.done() which will hang if the API request does not complete.
+
+  request(app)
+    .post('/api/v1/spotify/users/playlist')
+    .set('Cookie', `token=${token}`)
+    .then((result) => {
+      scope.done()
+      t.is(result.body.test, "73a")
+      t.end()
+    })
+})
+```
+<a name=enzymemount>
+# Enzyme - Mount Testing </a>
+
+```
+const page= <Provider store={store}><SearchBar /></Provider>
+
+test('search bar renders', t => {
+  const wrapperMount = mount(page)
+  t.is(wrapperMount.find('.search-bar').exists(), true)
+})
+```
+First we wrap the component we want to test in the Provider so that we can give it access to the store.
+
+Then we set up a const of the mounted (the component and its children) component and use ava assertion to check if it exists.
+
+A more complicated Enzyme test using Sinon to simulate a change in value and then a click is shown below:
+
+### Example Code - Commented:
+```
+test('search bar search button renders search results', t => {
+  sinon.stub(store,"dispatch")
+
+  // sinon will create a stub to intercept store.dispatch() calls.
+
+  const wrapperMount = mount(page)
+
+  // creates wrapperMount as SearchBar component in above example, and any child components of SearchBar
+
+  wrapperMount.find('.search-bar').simulate('change',{target:{value:"test"}})
+
+  // Simulates the value "test" being entered in the search bar via sinon
+
+  wrapperMount.find('#search-button').simulate('click')
+
+  // simulates a click and then below checks if a dispatch is initiated as a result of that click
+  
+  t.is(store.dispatch.called,true)
+})
+```
 <a name=reduxflow>
-# Redux Flow
-</a>
+# Redux Flow </a>
+
 Redux is designed for one directional top-down flow of state.
 
 ### Initial Clientside Dispatch - (Not Always Needed)
@@ -111,125 +270,6 @@ componentWillReceiveProps({data}) {
 ```
 ...
 ```
-
-# Nock - Get Route Testing
-
-```
-test.cb('check artist id route', t => {
- const artistObj = {
-   name: 'Izal',
-   type: 'artist'
- }
-
- let scope = nock('https://api.spotify.com')
-   .get('/v1/artists/2hazSY4Ef3aB9ATXW7F5w3')
-   .reply(200, artistObj)
-
- request(app)
-   .get('/api/v1/spotify/artists/2hazSY4Ef3aB9ATXW7F5w3')
-   .expect(200)
-   .then((res) => {
-     scope.done()
-     t.is(res.body.name, 'Izal')
-     t.is(res.body.type, 'artist')
-     t.end()
-   })
-
-})
-```
-When mocking a get route with Nock we first set up the mock route that is to be hit instead, configuring the get route and its response.
-
-Once this is done we can attempt to hit our own get route. What we are testing in this case is that the get route API works correctly and hits the external API that we are trying to retrieve from.
-
-The reason for this is that we will be running our tests often, and we do not want to actually hit the external API multiple times an hour.
-
-### Example Code - Commented:
-```
-test.cb('check artist id route', t => {
- const artistObj = {
-   name: 'Izal',
-   type: 'artist'
- }
-
- // We create a fake response object called artistObj that our mock server is going to reply with.
-
- let scope = nock('https://api.spotify.com')
-   .get('/v1/artists/2hazSY4Ef3aB9ATXW7F5w3')
-   .reply(200, artistObj)
-
-   // These three lines set up our mocked external API. This means that when our test function tries to hit api.spotify.com at the specified get route
-   // Nock will intercept it and reply with the status code 200 and artistObj.
-
- request(app)
-   .get('/api/v1/spotify/artists/2hazSY4Ef3aB9ATXW7F5w3')
-   .expect(200)
-   .then((res) => {
-     scope.done()
-     t.is(res.body.name, 'Izal')
-     t.is(res.body.type, 'artist')
-     t.end()
-   })
-
-   // From here we can just initiate a normal get request via superagent and Nock will intercept and respond as we set it to.
-
-})
-
-Post route testing with Nock is almost identical to Get route testing, as you can see below.
-
-```
-
-# Nock - Post Route Testing
-
-```
-test.cb('check createPlaylist post route', t => {
-let scope = nock('https://api.spotify.com')
-  .post(`/v1/users/some_username/playlists`)
-  .reply(201, {test: "73a"})
-let token = createToken({id: "some_username"}, app.get('JWT_SECRET'))
-  request(app)
-    .post('/api/v1/spotify/users/playlist')
-    .set('Cookie', `token=${token}`)
-    .then((result) => {
-      scope.done()
-      t.is(result.body.test, "73a")
-      t.end()
-    })
-})
-```
-When mocking a post route with Nock we first set up the mock route that is to be hit instead, configuring the post route and its response.
-
-Once this is done we can attempt to hit our own post route API. What we are testing in this case is that the post route API works correctly and hits the external API that we are posting to.
-
-### Example Code - Commented:
-```
-test.cb('check createPlaylist post route', t => {
-
-let scope = nock('https://api.spotify.com')
-  .post(`/v1/users/some_username/playlists`)
-  .reply(201, {test: "73a"})
-
-// These three lines set up our mocked external API. This means that when our test function tries to hit api.spotify.com at the specified post route
-// Nock will intercept it and reply with the status code and response object that we tell it to on the line above.
-
-  let token = createToken({id: "some_username"}, app.get('JWT_SECRET'))
-
-// Because we are dealing with an authenticated route, this line will take care of creating an authentication token for us
-
-// You can ignore this line and the .set below if you are working with a non-authenticated external API, but most external APIs will want auth.
-
-// From now on we just test as we normally would with Supertest, save for the scope.done() which will hang if the API request does not complete.
-
-  request(app)
-    .post('/api/v1/spotify/users/playlist')
-    .set('Cookie', `token=${token}`)
-    .then((result) => {
-      scope.done()
-      t.is(result.body.test, "73a")
-      t.end()
-    })
-})
-```
-
 
 
 

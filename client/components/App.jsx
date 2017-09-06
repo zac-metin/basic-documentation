@@ -1,12 +1,11 @@
 import React from 'react'
 import {HashRouter as Router, Route} from 'react-router-dom'
-import Greetings from './Greetings'
+import Links from './Links'
 
 const App = () => (
   <Router>
     <div className='app-container'>
-      <h1>Links</h1>
-      <Route exact path="/" component={Greetings} />
+      <Route path="/" component={Links} />
     </div>
   </Router>
 )
