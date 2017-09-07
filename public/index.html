@@ -184,7 +184,8 @@ Jest assertions are fairly intuitive, expect Expected to (something) actual.
 
 Describe blocks can be nested hierarchically.
 
-There are numerous different Jest assertions we can run:
+There are numerous different Jest assertions we can run, some shown below.
+Full list viewable at: https://facebook.github.io/jest/docs/en/expect.html
 
 ### Example Code - Commented:
 ```
@@ -200,6 +201,10 @@ describe('Ways of different assertions in Jest', () => {
   })
 
 
+  test('Function Been Called', () => {
+    expect(function(params)).toHaveBeenCalled()
+  })
+
   test('Error', () => {
     expect(function(params)).toThrowError(Error)
   })
@@ -211,6 +216,44 @@ describe('Ways of different assertions in Jest', () => {
   })
 
 })
+```
+<a name=jestmock>
+# Jest Testing - Mock Functions </a>
+
+Mock functions created with jest.fn() and return undefined by default
+Full documentation: https://facebook.github.io/jest/docs/en/mock-function-api.html
+
+```
+const mockFn = jest.fn()
+
+//returns undefined unless we write:
+
+mockFn.mockReturnValue("specify the value returned by mock function")
+
+const mockFn2 = jest.fn()
+  .mockReturnValue("this will be default, called third")
+  .mockReturnValueOnce("this gets called first")
+  .mockReturnValueOnce("this gets called second")
+
+  mockFn2.mock.instances is an array that contains each instantiation of the mock function.
+
+```
+Jest mock functions are simple to setup and will automatically have access to the Jest object.
+
+Jest object methods: https://facebook.github.io/jest/docs/en/jest-object.html
+
+Useful jest object methods include:
+
+```
+jest.mock('../modulename')
+
+const modulename = require('modulename') // Jest will mock this module
+
+jest.isMockFunction(function) // will check if a given function is real or mocked
+
+jest.enableAutomock() // allows automatic mocking of modules.
+
+jest.genMockFromModule(modulename) // auto generate a mocked version of the module
 ```
 <a name=reduxflow>
 # Redux Flow </a>
