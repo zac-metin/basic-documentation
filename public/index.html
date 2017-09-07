@@ -180,14 +180,14 @@ describe('Name for block of tests being run', () => {
 
 
 ```
-Jest assertions are fairly intuitive, expect Expected to (something) actual.
+Jest assertions are fairly intuitive, expect(actual).toBeComparedSomehowTo(expected).
 
 Describe blocks can be nested hierarchically.
 
 There are numerous different Jest assertions we can run, some shown below.
 Full list viewable at: https://facebook.github.io/jest/docs/en/expect.html
 
-### Example Code - Commented:
+### Example Code:
 ```
 describe('Ways of different assertions in Jest', () => {
 
@@ -254,6 +254,83 @@ jest.isMockFunction(function) // will check if a given function is real or mocke
 jest.enableAutomock() // allows automatic mocking of modules.
 
 jest.genMockFromModule(modulename) // auto generate a mocked version of the module
+```
+<a name=firebase>
+# Firebase - Usage With React </a>
+
+Firebase is initiated in the componentWillMount part of the React lifecycle
+
+More documentation: https://firebase.googleblog.com/2014/05/using-firebase-with-reactjs.html
+
+```
+componentWillMount: function() {
+  this.firebaseRef = new Firebase("https://ReactFireTodoApp.firebaseio.com/items/")
+
+  // link component to the desired firebase node
+
+  this.firebaseRef.on("child_added", function(dataSnapshot) {
+
+  // node is snapshotted and turned into an array on the state
+
+    this.items.push(dataSnapshot.val());
+    this.setState({
+      items: this.items
+    });
+  }.bind(this));
+}
+
+```
+This takes care of the initial link to the firebase node, but to allow the app to add to the node we will
+need to push to this.firebaseRef:
+
+```
+handleSubmit: function(e) {
+  e.preventDefault();
+  this.firebaseRef.push({
+    text: this.state.text
+  });
+  this.setState({text: ""});
+}
+```
+Then disconnect the firebase node on unmount of component.
+```
+componentWillUnmount: function() {
+  this.firebaseRef.off();
+}
+```
+<a name=firebasesdk>
+# Firebase - SDK </a>
+
+Firebase SDK is initiated like this:
+
+```
+import * as firebase from "firebase"
+
+var config = {
+  apiKey: "<API_KEY>",
+  authDomain: "<PROJECT_ID>.firebaseapp.com",
+  databaseURL: "https://<DATABASE_NAME>.firebaseio.com",
+  storageBucket: "<BUCKET>.appspot.com",
+};
+firebase.initializeApp(config);
+
+```
+
+Once that's done, the Google Cloud storage bucket can be accessed via firebase.storage() and used as follows:
+
+```
+var storage = firebase.storage()
+
+var storageRef = storage.ref()
+
+var imagesRef = storageRef.child('images')
+var spaceRef = storageRef.child('images/space.jpg')
+```
+Then disconnect the firebase node on unmount of component.
+```
+componentWillUnmount: function() {
+  this.firebaseRef.off();
+}
 ```
 <a name=reduxflow>
 # Redux Flow </a>

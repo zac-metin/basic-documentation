@@ -9,6 +9,8 @@ const Links = () => (
     <a href="#enzymemount" id="link">Enzyme - Mount</a>
     <a href="#jesttest" id="link">Jest Basics</a>
     <a href="#jestmock" id="link">Jest Mocks</a>
+    <a href="#firebase" id="link">Firebase</a>
+    <a href="#firebasesdk" id="link">Firebase SDK</a>
     <a href="#reduxflow" id="link">Redux Flow</a>
   </div>
 )

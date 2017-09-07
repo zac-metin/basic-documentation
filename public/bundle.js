@@ -12356,6 +12356,26 @@ var Links = function Links() {
     ),
     _react2.default.createElement(
       'a',
+      { href: '#jesttest', id: 'link' },
+      'Jest Basics'
+    ),
+    _react2.default.createElement(
+      'a',
+      { href: '#jestmock', id: 'link' },
+      'Jest Mocks'
+    ),
+    _react2.default.createElement(
+      'a',
+      { href: '#firebase', id: 'link' },
+      'Firebase'
+    ),
+    _react2.default.createElement(
+      'a',
+      { href: '#firebasesdk', id: 'link' },
+      'Firebase SDK'
+    ),
+    _react2.default.createElement(
+      'a',
       { href: '#reduxflow', id: 'link' },
       'Redux Flow'
     )
