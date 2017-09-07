@@ -7,6 +7,7 @@ const Links = () => (
     <a href="#nockpost" id="link">Nock - Post</a>
     <a href="#enzymeshallow" id="link">Enzyme - Shallow</a>
     <a href="#enzymemount" id="link">Enzyme - Mount</a>
+    <a href="#jesttest" id="link">Jest</a>
     <a href="#reduxflow" id="link">Redux Flow</a>
   </div>
 )

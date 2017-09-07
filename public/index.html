@@ -166,6 +166,52 @@ test('search bar search button renders search results', t => {
   t.is(store.dispatch.called,true)
 })
 ```
+<a name=jesttest>
+# Jest Testing - Basics </a>
+
+```
+const importedFunction = require('./importedFunction')
+
+describe('Name for block of tests being run', () => {
+  test('Way in which we are testing importedFunction', () => {
+    expect(importedFunction(params)).toBe(importedFunctionOutput)
+  })
+})
+
+
+```
+Jest assertions are fairly intuitive, expect Expected to (something) actual.
+
+Describe blocks can be nested hierarchically.
+
+There are numerous different Jest assertions we can run:
+
+### Example Code - Commented:
+```
+describe('Ways of different assertions in Jest', () => {
+
+  test('Equivalency', () => {
+    expect(importedFunction(params)).toBe(expectedValue)
+  })
+
+  test('Truthy/Falsy', () => {
+    expect(function(params)).toBeTruthy()
+    expect(function2(params)).toBeFalsy()
+  })
+
+
+  test('Error', () => {
+    expect(function(params)).toThrowError(Error)
+  })
+
+  const houseForSale = {bedrooms: 4}
+
+  test('Object to have property', () => {
+    expect(object).toHaveProperty('bedrooms',4)
+  })
+
+})
+```
 <a name=reduxflow>
 # Redux Flow </a>
 
